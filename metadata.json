@@ -1,0 +1,6 @@
+{
+  "name": "WordTrack",
+  "description": "A centralized hub for discovering, accessing, tracking, and journaling daily performance across online word games.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

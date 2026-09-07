@@ -1,0 +1,21 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "game_logs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "playedDate", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "game_submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "submittedAt", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

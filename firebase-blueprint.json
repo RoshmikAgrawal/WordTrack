@@ -1,0 +1,115 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Registered user profile and preferences",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "format": "email", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 100 },
+        "photoURL": { "type": "string", "maxLength": 1024 },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "favoriteGameIds": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "displayName", "role", "favoriteGameIds", "createdAt", "updatedAt"]
+    },
+    "Game": {
+      "title": "Game",
+      "description": "Word game catalog metadata and configuration",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 500 },
+        "gameUrl": { "type": "string", "maxLength": 1024 },
+        "category": { "type": "string", "maxLength": 64 },
+        "iconUrl": { "type": "string", "maxLength": 1024 },
+        "maxAttempts": { "type": "number" },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "description", "gameUrl", "category", "maxAttempts", "isActive", "createdAt", "updatedAt"]
+    },
+    "GameLog": {
+      "title": "GameLog",
+      "description": "Daily user game performance entry",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "gameId": { "type": "string", "maxLength": 128 },
+        "gameTitle": { "type": "string", "maxLength": 100 },
+        "playedDate": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", "maxLength": 10 },
+        "status": { "type": "string", "enum": ["solved", "failed"] },
+        "attempts": { "type": "number" },
+        "maxAttempts": { "type": "number" },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "loggedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "gameId", "gameTitle", "playedDate", "status", "maxAttempts", "loggedAt"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Custom game categories and badge color palettes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 500 },
+        "colorKey": { "type": "string", "maxLength": 64 },
+        "order": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "colorKey"]
+    },
+    "GameSubmission": {
+      "title": "GameSubmission",
+      "description": "User submitted game for admin review and approval",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "userDisplayName": { "type": "string", "maxLength": 100 },
+        "userEmail": { "type": "string", "format": "email", "maxLength": 256 },
+        "title": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 500 },
+        "gameUrl": { "type": "string", "maxLength": 1024 },
+        "iconUrl": { "type": "string", "maxLength": 1024 },
+        "isDaily": { "type": "boolean" },
+        "categoryType": { "type": "string", "maxLength": 64 },
+        "categoryConfig": { "type": "object" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "adminFeedback": { "type": "string", "maxLength": 1000 },
+        "submittedAt": { "type": "string", "format": "date-time" },
+        "reviewedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "userDisplayName", "userEmail", "title", "description", "gameUrl", "isDaily", "categoryType", "status", "submittedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profile with role and favorited games list"
+    },
+    "/games/{gameId}": {
+      "schema": { "$ref": "#/entities/Game" },
+      "description": "Catalog of supported online word games"
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Configurable game categories and color badge metadata"
+    },
+    "/game_logs/{logId}": {
+      "schema": { "$ref": "#/entities/GameLog" },
+      "description": "Daily gameplay records with deterministic id {userId}_{gameId}_{playedDate}"
+    },
+    "/game_submissions/{submissionId}": {
+      "schema": { "$ref": "#/entities/GameSubmission" },
+      "description": "User submitted games queued for admin review"
+    }
+  }
+}

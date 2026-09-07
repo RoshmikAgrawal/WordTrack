@@ -1,0 +1,69 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        (request.auth.token.email == "roshmikagrawal@gmail.com" && 
+         request.auth.token.email_verified == true) ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    // 1. Connection Healthcheck Endpoint
+    match /test/{docId} {
+      allow read: if true;
+    }
+
+    // 2. Categories Collection: Public read, admin-only write
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 3. Games Catalog: Public read, admin-only write
+    match /games/{gameId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 4. User Profiles & Favorites
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      // Users can write their own profile, but CANNOT escalate their own role to 'admin'
+      allow write: if isAuthenticated() && request.auth.uid == userId && (
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']) ||
+        isAdmin()
+      );
+    }
+
+    // 5. Daily Game Logs & Diary
+    match /game_logs/{logId} {
+      allow read, update, delete: if isAuthenticated() && request.auth.uid == resource.data.userId;
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId;
+    }
+
+    // 6. Game Submissions Collection
+    match /game_submissions/{submissionId} {
+      // Users can read only their own submissions; Admins can read all submissions
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+      
+      // Authenticated users can create a submission under their own UID with status strictly set to 'pending'
+      allow create: if isAuthenticated() && 
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.status == 'pending';
+
+      // Only Admins can edit metadata, change status to 'approved'/'rejected', or delete submissions
+      allow update, delete: if isAdmin();
+    }
+  }
+}
+

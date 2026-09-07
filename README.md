@@ -8,7 +8,9 @@
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Firebase 12](https://img.shields.io/badge/Firebase-12.0-FFCA28?style=flat-square&logo=firebase&logoColor=black)](https://firebase.google.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg?style=flat-square)](LICENSE)
-[![Deployment: Vercel](https://img.shields.io/badge/Deployment-Vercel-000000?style=flat-square&logo=vercel&logoColor=white)](https://vercel.com/)
+[![Live App](https://img.shields.io/badge/Live_Demo-wordtrack--app.vercel.app-000000?style=flat-square&logo=vercel&logoColor=white)](https://wordtrack-app.vercel.app)
+
+🚀 **Live Website:** [https://wordtrack-app.vercel.app](https://wordtrack-app.vercel.app)
 
 ---
 
@@ -119,8 +121,8 @@ wordtrack/
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/<username>/wordtrack.git
-   cd wordtrack
+   git clone https://github.com/RoshmikAgrawal/WordTrack.git
+   cd WordTrack
    ```
 
 2. **Install dependencies**:
@@ -183,7 +185,7 @@ firebase deploy --only firestore:rules
 
 ## 7. Deployment Workflow (Vercel)
 
-WordTrack is designed for zero-configuration, continuous deployments on **Vercel**:
+WordTrack is designed for continuous deployments on **Vercel** and is hosted live in production at [https://wordtrack-app.vercel.app](https://wordtrack-app.vercel.app):
 
 1. **Connect Repository**: Link the GitHub repository in the Vercel Dashboard.
 2. **Framework Preset**: Select **Vite** as the build framework preset.
@@ -196,7 +198,7 @@ WordTrack is designed for zero-configuration, continuous deployments on **Vercel
 
 > [!IMPORTANT]
 > **Firebase Authorized Domains**:
-> After deployment, navigate to **Firebase Console > Authentication > Settings > Authorized domains** and add your Vercel production domain (e.g., `wordtrack.vercel.app`). Without this, Google Sign-In and OAuth popup handshakes will be blocked.
+> Ensure `wordtrack-app.vercel.app` is added to **Firebase Console > Authentication > Settings > Authorized domains** so Google Sign-In and OAuth handshakes operate securely on the live site.
 
 ---
 
